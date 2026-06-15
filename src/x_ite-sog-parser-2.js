@@ -26,6 +26,9 @@ class SOGParser extends X3D .X3DParser
 
    isValid ()
    {
+      if (this .buffer .byteLength < 4)
+         return false;
+      
       // Check magic.
 
       const dataView = new DataView (this .buffer);
