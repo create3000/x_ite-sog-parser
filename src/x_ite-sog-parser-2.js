@@ -210,7 +210,7 @@ class SOGParser extends X3D .X3DParser
          // 16-bit normalized value per axis (0..65535)
 
          const
-            qx = (means_u [i + 0] << 8) | means_l [i + 0],
+            qx = (means_u [i]     << 8) | means_l [i],
             qy = (means_u [i + 1] << 8) | means_l [i + 1],
             qz = (means_u [i + 2] << 8) | means_l [i + 2];
 
@@ -249,7 +249,7 @@ class SOGParser extends X3D .X3DParser
       for (let i = 0; i < N; i += 4)
       {
          const
-            a = toComp (quats [i + 0]),
+            a = toComp (quats [i]),
             b = toComp (quats [i + 1]),
             c = toComp (quats [i + 2]);
 
@@ -290,7 +290,7 @@ class SOGParser extends X3D .X3DParser
       for (let i = 0; i < N; i += 4)
       {
          array .push (
-            Math .exp (codebook [scales [i + 0]]), // r,g,b are 0..255
+            Math .exp (codebook [scales [i]]), // r,g,b are 0..255
             Math .exp (codebook [scales [i + 1]]),
             Math .exp (codebook [scales [i + 2]]),
          );
@@ -314,12 +314,12 @@ class SOGParser extends X3D .X3DParser
       for (let i = 0; i < N; i += 4)
       {
          array .push (
-            codebook [sh0 [i + 0]],
+            codebook [sh0 [i]],
             codebook [sh0 [i + 1]],
             codebook [sh0 [i + 2]],
          );
 
-         alphas .push (sh0 [i+ 3] / 255);
+         alphas .push (sh0 [i + 3] / 255);
       }
 
       return [alphas, array];
