@@ -103,7 +103,29 @@ class SOGParser extends X3D .X3DParser
 
    async unpackImage (key)
    {
-      console .log (key);
+      const
+         bytes = this .files [key],
+         blob  = new Blob ([bytes], { type: "image/webp" }),
+         url   = URL .createObjectURL (blob),
+         image = await this .loadImage (url);
+
+      console .log (key, image .width, image .height)
+
+      URL .revokeObjectURL (url);
+   }
+
+   loadImage (url)
+   {
+      return new Promise ((resolve, reject) =>
+      {
+         const image = new Image ();
+
+         image .onload  = () => resolve (image);
+         image .onerror = event => reject (new Error (`Couldn't load WebP image: ${event .type}`));
+         image .onabort = event => reject (new Error (`Couldn't load WebP image: ${event .type}`));
+
+         image .src = url;
+      });
    }
 }
 
