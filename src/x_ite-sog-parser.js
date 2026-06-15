@@ -32,7 +32,19 @@ class SOGParser extends X3D .X3DParser
 
       this .files = unzipSync (new Uint8Array (this .buffer));
 
-      console .log (this .files)
+      const files = new Set ([
+         "means_l.webp",
+         "means_u.webp",
+         "scales.webp",
+         "sh0.webp",
+         "shN_centroids.webp",
+         "shN_labels.webp",
+         "quats.webp",
+         "meta.json",
+      ]);
+
+      if (!Object .keys (this .files) .every (file => files .has (file)))
+         return false;
 
       return true;
    }
@@ -46,7 +58,7 @@ class SOGParser extends X3D .X3DParser
 
    async sog ()
    {
-      // const data = await zip .file ("meta.json") .async ("arraybuffer");
+      console .log (this .files)
 
       const
          browser = this .getBrowser (),
