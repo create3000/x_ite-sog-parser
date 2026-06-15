@@ -32,7 +32,7 @@ class SOGParser extends X3D .X3DParser
 
       this .files = unzipSync (new Uint8Array (this .buffer));
 
-      const files = new Set ([
+      const keys = new Set ([
          "means_l.webp",
          "means_u.webp",
          "scales.webp",
@@ -43,12 +43,12 @@ class SOGParser extends X3D .X3DParser
          "meta.json",
       ]);
 
-      if (!Object .keys (this .files) .every (file => files .has (file)))
+      if (!Object .keys (this .files) .every (key => keys .has (key)))
          return false;
 
-      this .meta = this .parseMeta ();
+      const meta = this .parseMeta ();
 
-      if (this .meta .version < 2 || this .meta .version > 2)
+      if (meta .version < 2 || meta .version > 2)
          return false;
 
       return true;
@@ -84,13 +84,26 @@ class SOGParser extends X3D .X3DParser
 
    parseMeta ()
    {
-      return JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
+      return this .files ["meta.json"] = JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
    }
 
    async unpackFiles ()
    {
+      await this .unpackImages ();
+
       console .log (this .files);
-      console .log (this .meta);
+   }
+
+   async unpackImages ()
+   {
+      return Promise .all (Object .keys (this .files)
+         .filter (key => key .endsWith (".webp"))
+         .map (key => this .unpackImage (key)));
+   }
+
+   async unpackImage (key)
+   {
+      console .log (key);
    }
 }
 
