@@ -96,7 +96,7 @@ class SOGParser extends X3D .X3DParser
 
    parseMeta ()
    {
-      return this .files ["meta.json"] = JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
+      return this .files .meta = JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
    }
 
    async unpackFiles ()
@@ -137,7 +137,8 @@ class SOGParser extends X3D .X3DParser
          image = await this .loadImage (url),
          data  = this .readPixels (image);
 
-      this .files [key] = data;
+      this .files [key] = image;
+      this .files [key .replace (".webp", "")] = data;
 
       URL .revokeObjectURL (url);
    }
@@ -195,9 +196,9 @@ class SOGParser extends X3D .X3DParser
       const unlog = n => Math .sign (n) * (Math .exp (Math .abs (n)) - 1);
 
       const {
-         ["meta.json"]: { count, means: { mins, maxs }},
-         ["means_l.webp"]: means_l,
-         ["means_u.webp"]: means_u,
+         meta: { count, means: { mins, maxs }},
+         means_l,
+         means_u,
       } = this .files;
 
       const
@@ -237,8 +238,8 @@ class SOGParser extends X3D .X3DParser
       const toComp = c => (c / 255 - 0.5) * 2 / Math .SQRT2;
 
       const {
-         ["meta.json"]: { count },
-         ["quats.webp"]: quats,
+         meta: { count },
+         quats,
       } = this .files;
 
       const
@@ -278,8 +279,8 @@ class SOGParser extends X3D .X3DParser
    unpackScales ()
    {
       const {
-         ["meta.json"]: { count, scales: { codebook } },
-         ["scales.webp"]: scales,
+         meta: { count, scales: { codebook } },
+         scales,
       } = this .files;
 
       const
@@ -301,8 +302,8 @@ class SOGParser extends X3D .X3DParser
    unpackAlphasAndAColors ()
    {
       const {
-         ["meta.json"]: { count, sh0: { codebook } },
-         ["sh0.webp"]: sh0,
+         meta: { count, sh0: { codebook } },
+         sh0,
       } = this .files;
 
       const
@@ -322,6 +323,24 @@ class SOGParser extends X3D .X3DParser
       }
 
       return [alphas, array];
+   }
+
+   unpackSphericalHarmonics ()
+   {
+      const {
+         meta: { count, sh0: { codebook } },
+         sh0,
+      } = this .files;
+
+      const
+         N      = count * 4,
+         array  = [ ];
+
+      for (let i = 0; i < N; i += 4)
+      {
+      }
+
+      return array;
    }
 }
 
