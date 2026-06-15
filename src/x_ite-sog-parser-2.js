@@ -122,8 +122,9 @@ class SOGParser extends X3D .X3DParser
       {
          const image = new Image ();
 
-         image .onload  = () => resolve (image);
-         image .onerror = event => reject (new Error (`Couldn't load WebP image: ${event .type}`));
+         image .onload = () => resolve (image);
+
+         image .onerror =
          image .onabort = event => reject (new Error (`Couldn't load WebP image: ${event .type}`));
 
          image .src = url;
