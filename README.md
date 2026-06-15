@@ -33,7 +33,7 @@ npm i x_ite-sog-parser
 
 ## Converter
 
-There is a converter: https://superspl.at/convert
+There is a converter at: https://superspl.at/convert
 
 ## License
 
