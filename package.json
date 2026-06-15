@@ -2,8 +2,8 @@
   "name": "x_ite-sog-parser",
   "version": "1.0.0",
   "description": "3DGS SOG File Format Parser for X_ITE",
-  "main": "dist/x_ite-sog-parser.js",
-  "module": "dist/x_ite-sog-parser.js",
+  "main": "dist/x_ite-sog-parser-2.js",
+  "module": "dist/x_ite-sog-parser-2.js",
   "files": [
     "dist/*"
   ],
