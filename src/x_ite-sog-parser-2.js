@@ -161,6 +161,11 @@ class SOGParser extends X3D .X3DParser
 
       return data;
    }
+
+   getPixel (i, width)
+   {
+      return [i % width, Math .floor (i / width)];
+   }
 }
 
 X3D .GoldenGate .addParsers (SOGParser);
