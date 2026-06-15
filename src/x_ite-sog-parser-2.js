@@ -86,6 +86,56 @@ class SOGParser extends X3D .X3DParser
 
       gaussianSplats .sphericalHarmonicsDegree0Coef0 = gaussianCloud .colors;
 
+      // Set spherical harmonics.
+
+      if (gaussianCloud .shs .length)
+      {
+         const {
+            meta: { count, shN: { bands } },
+         } = this .files;
+
+         const
+            shs                       = gaussianCloud .shs,
+            coeffs                    = [0, 3, 8, 15],
+            shCoeffs                  = coeffs [bands], // coefficients per color channel
+            shDegree                  = bands,
+            shCoefPerChannelPerSplat3 = shCoeffs * 3,
+            splatShs                  = Array .from ({ length: shDegree }, (_, degree) => Array .from ({ length: this .coefsForDegree (degree) }) .map (() => [ ]));
+
+         for (let i = 0; i < count; ++ i)
+         {
+            const stride = shCoefPerChannelPerSplat3 * i;
+
+            for (let d = 0, sh = 0; d < shDegree; ++ d)
+            {
+               const
+                  coefs = this .coefsForDegree (d),
+                  shsD  = splatShs [d];
+
+               for (let c = 0; c < coefs; ++ c)
+               {
+                  const shsDC = shsD [c];
+
+                  for (let j = 0; j < 3; ++ j, ++ sh)
+                     shsDC .push (shs [stride + sh]);
+               }
+            }
+         }
+
+         // GaussianSplats node only supports up to degree 3.
+         const shDegreeMax = Math .min (shDegree, 3);
+
+         for (let d = 0; d < shDegreeMax; ++ d)
+         {
+            const coefs = this .coefsForDegree (d);
+
+            for (let c = 0; c < coefs; ++ c)
+               gaussianSplats [`sphericalHarmonicsDegree${d + 1}Coef${c}`] = splatShs [d] [c];
+         }
+      }
+
+      // Add nodes to scene.
+
       transform .rotation = new X3D .Rotation4 (1, 0, 0, Math .PI);
 
       transform .children .push (gaussianSplats);
@@ -107,10 +157,8 @@ class SOGParser extends X3D .X3DParser
          positions        = this .unpackPositions (),
          rotations        = this .unpackRotations (),
          scales           = this .unpackScales (),
-         [alphas, colors] = this .unpackAlphasAndAColors ();
-
-      console .log (this .files);
-      console .log (alphas, colors);
+         [alphas, colors] = this .unpackAlphasAndAColors (),
+         shs              = this .unpackSphericalHarmonics ();
 
       return {
          positions,
@@ -118,6 +166,7 @@ class SOGParser extends X3D .X3DParser
          scales,
          alphas,
          colors,
+         shs,
       }
    }
 
@@ -327,20 +376,65 @@ class SOGParser extends X3D .X3DParser
 
    unpackSphericalHarmonics ()
    {
+      if (!this .files .meta .shN)
+         return [ ];
+
       const {
-         meta: { count, sh0: { codebook } },
-         sh0,
+         meta: { count, shN: { bands, codebook } },
+         shN_labels,
+         shN_centroids,
+         "shN_centroids.webp": { width },
       } = this .files;
 
+      const getIndex = (u, v) => u + v * width;
+
       const
-         N      = count * 4,
-         array  = [ ];
+         coeffs   = [0, 3, 8, 15],
+         shCoeffs = coeffs [bands]; // coefficients per color channel
+
+      if (!shCoeffs)
+         return [ ];
+
+      const
+         N     = count * 4,
+         array = [ ];
 
       for (let i = 0; i < N; i += 4)
       {
+         // 1. Look up this gaussian's palette entry
+
+         const label = shN_labels [i] + (shN_labels [i + 1] << 8);
+
+         // 2. For each coefficient, read RGB from the centroids pixel and map through the codebook.
+
+         for (let c = 0; c < shCoeffs; ++ c)
+         {
+            const
+               u = (label % 64) * shCoeffs + c,
+               v = Math .floor (label / 64);
+
+            // pixel (u, v) in shN_centroids.webp
+            const index = getIndex (u, v) * 4;
+
+            const
+               r = shN_centroids [index],
+               g = shN_centroids [index + 1],
+               b = shN_centroids [index + 2];
+
+            array .push (
+               codebook [r], // SH AC coefficient for color channel 0
+               codebook [g], // SH AC coefficient for color channel 1
+               codebook [b], // SH AC coefficient for color channel 2
+            );
+         }
       }
 
       return array;
+   }
+
+   coefsForDegree (degree)
+   {
+      return degree * 2 + 3;
    }
 }
 
