@@ -33,18 +33,17 @@ class SOGParser extends X3D .X3DParser
 
       this .files = unzipSync (new Uint8Array (this .buffer));
 
-      const keys = new Set ([
+      // Check minimum requirement for Gaussian Splats.
+      const keys = [
          "means_l.webp",
          "means_u.webp",
          "scales.webp",
          "sh0.webp",
-         "shN_centroids.webp",
-         "shN_labels.webp",
          "quats.webp",
          "meta.json",
-      ]);
+      ];
 
-      if (!Object .keys (this .files) .every (key => keys .has (key)))
+      if (!keys .every (key => this .files [key]))
          return false;
 
       const meta = this .parseMeta ();
