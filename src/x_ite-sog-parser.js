@@ -75,7 +75,7 @@ class SOGParser extends X3D .X3DParser
 
       const
          gaussianSplats = scene .createNode ("GaussianSplats"),
-         stuff          = this .unpackFiles ();
+         stuff          = await this .unpackFiles ();
 
       scene .rootNodes .push (gaussianSplats);
 
@@ -87,7 +87,7 @@ class SOGParser extends X3D .X3DParser
       return JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
    }
 
-   unpackFiles ()
+   async unpackFiles ()
    {
       console .log (this .files);
       console .log (this .meta);
