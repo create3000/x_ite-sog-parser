@@ -401,7 +401,7 @@ class SOGParser extends X3D .X3DParser
 
       for (let i = 0; i < N; i += 4)
       {
-         // 1. Look up this gaussian's palette entry
+         // 1. Look up this gaussian's palette entry.
 
          const label = shN_labels [i] + (shN_labels [i + 1] << 8);
 
