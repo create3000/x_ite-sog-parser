@@ -7,7 +7,7 @@ module .exports = async () =>
 {
    // `src/${entry}.js`;
    const entries = [
-      "x_ite-sog-parser",
+      "x_ite-sog-parser-2",
    ];
 
    const targets = [ ];
