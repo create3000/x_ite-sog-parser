@@ -75,10 +75,21 @@ class SOGParser extends X3D .X3DParser
       await this .getBrowser () .loadComponents (scene);
 
       const
+         transform      = scene .createNode ("Transform"),
          gaussianSplats = scene .createNode ("GaussianSplats"),
-         stuff          = await this .unpackFiles ();
+         gaussianCloud  = await this .unpackFiles ();
 
-      scene .rootNodes .push (gaussianSplats);
+      gaussianSplats .positions    = gaussianCloud .positions;
+      gaussianSplats .orientations = gaussianCloud .rotations;
+      gaussianSplats .scales       = gaussianCloud .scales;
+      gaussianSplats .opacities    = gaussianCloud .alphas;
+
+      gaussianSplats .sphericalHarmonicsDegree0Coef0 = gaussianCloud .colors;
+
+      transform .rotation = new X3D .Rotation4 (1, 0, 0, Math .PI);
+
+      transform .children .push (gaussianSplats);
+      scene .rootNodes .push (transform);
 
       return scene;
    }
@@ -93,13 +104,21 @@ class SOGParser extends X3D .X3DParser
       await this .unpackImages ();
 
       const
-         positions     = this .unpackPositions (),
-         rotations     = this .unpackRotations (),
-         scales        = this .unpackScales (),
-         [alphas, sh0] = this .unpackAlphasAndAColors ();
+         positions        = this .unpackPositions (),
+         rotations        = this .unpackRotations (),
+         scales           = this .unpackScales (),
+         [alphas, colors] = this .unpackAlphasAndAColors ();
 
       console .log (this .files);
-      console .log (alphas, sh0);
+      console .log (alphas, colors);
+
+      return {
+         positions,
+         rotations,
+         scales,
+         alphas,
+         colors,
+      }
    }
 
    async unpackImages ()
