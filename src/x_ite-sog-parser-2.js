@@ -153,6 +153,9 @@ class SOGParser extends X3D .X3DParser
       gl .bindFramebuffer (gl .FRAMEBUFFER, framebuffer);
       gl .framebufferTexture2D (gl .FRAMEBUFFER, gl .COLOR_ATTACHMENT0, gl .TEXTURE_2D, texture, 0);
       gl .readPixels (0, 0, width, height, gl .RGBA, gl .UNSIGNED_BYTE, data);
+
+      // Clean up.
+
       gl .deleteFramebuffer (framebuffer);
       gl .deleteTexture (texture);
 
