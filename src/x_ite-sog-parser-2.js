@@ -4,6 +4,7 @@ const X3D = window [Symbol .for ("X_ITE.X3D")];
 
 /*
  * Parser
+ * Reference: https://github.com/playcanvas/splat-transform/blob/main/src/lib/readers/read-sog.ts
  */
 
 class SOGParser extends X3D .X3DParser
