@@ -92,10 +92,12 @@ class SOGParser extends X3D .X3DParser
    {
       await this .unpackImages ();
 
-      const positions = this .unpackPositions ();
+      const
+         positions = this .unpackPositions (),
+         rotations = this .unpackRotations ();
 
       console .log (this .files);
-      console .log (positions);
+      console .log (rotations);
    }
 
    async unpackImages ()
@@ -177,9 +179,9 @@ class SOGParser extends X3D .X3DParser
          ["means_u.webp"]: means_u,
       } = this .files;
 
-      const N = count * 4;
-
-      const positions = [ ];
+      const
+         N         = count * 4,
+         positions = [ ];
 
       for (let i = 0; i < N; i += 4)
       {
@@ -207,6 +209,49 @@ class SOGParser extends X3D .X3DParser
       }
 
       return positions;
+   }
+
+   unpackRotations ()
+   {
+      const toComp = c => (c / 255 - 0.5) * 2 / Math .SQRT2;
+
+      const {
+         ["meta.json"]: { count },
+         ["quats.webp"]: quats,
+      } = this .files;
+
+      const
+         N         = count * 4,
+         rotations = [ ];
+
+      for (let i = 0; i < N; i += 4)
+      {
+         const
+            a = toComp (quats [i + 0]),
+            b = toComp (quats [i + 1]),
+            c = toComp (quats [i + 2]);
+
+         const mode = quats [i + 3] - 252; // 0..3 → omitted component is w, x, y or z respectively
+
+         // Reconstruct the omitted component so that ||q|| = 1 and w.l.o.g. the omitted one is non-negative.
+
+         const
+            t = Math .hypot (a, b, c),
+            d = Math .sqrt (Math .max (0, 1 - t));
+
+         // Place components according to mode; q is ordered [x, y, z, w].
+
+         switch (mode)
+         {
+            case 0: rotations .push (a, b, c, d); break; // omitted = w
+            case 1: rotations .push (d, b, c, a); break; // omitted = x
+            case 2: rotations .push (b, d, c, a); break; // omitted = y
+            case 3: rotations .push (b, c, d, a); break; // omitted = z
+            default: throw new Error ("Invalid quaternion mode");
+         }
+      }
+
+      return rotations;
    }
 }
 
