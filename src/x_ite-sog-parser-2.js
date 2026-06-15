@@ -124,14 +124,16 @@ class SOGParser extends X3D .X3DParser
 
       for (let c = 0; c < shCoeffs; ++ c)
       {
-         const splatSh = splatShs [c];
+         const
+            c3      = c * 3,
+            splatSh = splatShs [c];
 
          for (let i = 0; i < numSplats; ++ i)
          {
-            const stride = shCoeffs3 * i;
+            const offset = shCoeffs3 * i + c3;
 
             for (let j = 0; j < 3; ++ j)
-               splatSh .push (shs [stride + c * 3 + j]);
+               splatSh .push (shs [offset + j]);
          }
       }
 
