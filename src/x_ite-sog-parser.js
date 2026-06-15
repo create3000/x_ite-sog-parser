@@ -1,3 +1,5 @@
+import { unzipSync } from "../node_modules/fflate/esm/browser.js";
+
 const X3D = window [Symbol .for ("X_ITE.X3D")];
 
 /*
@@ -28,6 +30,10 @@ class SOGParser extends X3D .X3DParser
       if (dataView .getUint32 (0, false) !== 0x504B0304)
          return false;
 
+      this .files = unzipSync (new Uint8Array (this .buffer));
+
+      console .log (this .files)
+
       return true;
    }
 
@@ -40,6 +46,8 @@ class SOGParser extends X3D .X3DParser
 
    async sog ()
    {
+      // const data = await zip .file ("meta.json") .async ("arraybuffer");
+
       const
          browser = this .getBrowser (),
          scene   = this .getScene ();

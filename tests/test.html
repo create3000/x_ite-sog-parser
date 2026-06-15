@@ -36,6 +36,8 @@ $("#file-input") .on ("change", (event) =>
 
   reader .readAsArrayBuffer (file);
 });
+
+X3D .getBrowser () .loadURL (new X3D .MFString ("./assets/cactus.sog"));
     </script>
     <style>
 :root {
@@ -57,7 +59,7 @@ x3d-canvas {
   </head>
   <body>
 <h1>SOG File Test Page</h1>
-<x3d-canvas id="x3d-canvas" debug="true" src="./assets/cactus.sog"></x3d-canvas>
+<x3d-canvas id="x3d-canvas" debug="true"></x3d-canvas>
 <br>
 <button id="view-all">View All</button> <input type="file" id="file-input" accept=".sog">
 
