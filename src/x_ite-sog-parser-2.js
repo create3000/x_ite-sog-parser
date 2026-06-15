@@ -107,9 +107,10 @@ class SOGParser extends X3D .X3DParser
          bytes = this .files [key],
          blob  = new Blob ([bytes], { type: "image/webp" }),
          url   = URL .createObjectURL (blob),
-         image = await this .loadImage (url);
+         image = await this .loadImage (url),
+         data  = this .readPixels (image);
 
-      console .log (key, image .width, image .height)
+      this .files [key] = data;
 
       URL .revokeObjectURL (url);
    }
@@ -126,6 +127,34 @@ class SOGParser extends X3D .X3DParser
 
          image .src = url;
       });
+   }
+
+   readPixels (image)
+   {
+      const
+         gl          = this .getBrowser () .getContext (),
+         texture     = gl .createTexture (),
+         framebuffer = gl .createFramebuffer (),
+         width       = image .width,
+         height      = image .height,
+         data        = new Uint8Array (width * height * 4);
+
+      // Create texture.
+
+      gl .bindTexture (gl .TEXTURE_2D, texture);
+      gl .pixelStorei (gl .UNPACK_COLORSPACE_CONVERSION_WEBGL, gl .NONE);
+      gl .texImage2D  (gl .TEXTURE_2D, 0, gl .RGBA, width, height, 0, gl .RGBA, gl .UNSIGNED_BYTE, image);
+      gl .pixelStorei (gl .UNPACK_COLORSPACE_CONVERSION_WEBGL, gl .BROWSER_DEFAULT_WEBGL);
+
+      // Read pixels from framebuffer.
+
+      gl .bindFramebuffer (gl .FRAMEBUFFER, framebuffer);
+      gl .framebufferTexture2D (gl .FRAMEBUFFER, gl .COLOR_ATTACHMENT0, gl .TEXTURE_2D, texture, 0);
+      gl .readPixels (0, 0, width, height, gl .RGBA, gl .UNSIGNED_BYTE, data);
+      gl .deleteFramebuffer (framebuffer);
+      gl .deleteTexture (texture);
+
+      return data;
    }
 }
 
