@@ -94,10 +94,11 @@ class SOGParser extends X3D .X3DParser
 
       const
          positions = this .unpackPositions (),
-         rotations = this .unpackRotations ();
+         rotations = this .unpackRotations (),
+         scales    = this .unpackScales ();
 
       console .log (this .files);
-      console .log (rotations);
+      console .log (scales);
    }
 
    async unpackImages ()
@@ -180,8 +181,8 @@ class SOGParser extends X3D .X3DParser
       } = this .files;
 
       const
-         N         = count * 4,
-         positions = [ ];
+         N     = count * 4,
+         array = [ ];
 
       for (let i = 0; i < N; i += 4)
       {
@@ -201,14 +202,14 @@ class SOGParser extends X3D .X3DParser
 
          // Undo the symmetric log transform used at encode time:
 
-         positions .push (
+         array .push (
             unlog (nx),
             unlog (ny),
             unlog (nz),
          );
       }
 
-      return positions;
+      return array;
    }
 
    unpackRotations ()
@@ -221,8 +222,8 @@ class SOGParser extends X3D .X3DParser
       } = this .files;
 
       const
-         N         = count * 4,
-         rotations = [ ];
+         N     = count * 4,
+         array = [ ];
 
       for (let i = 0; i < N; i += 4)
       {
@@ -243,15 +244,38 @@ class SOGParser extends X3D .X3DParser
 
          switch (mode)
          {
-            case 0: rotations .push (a, b, c, d); break; // omitted = w
-            case 1: rotations .push (d, b, c, a); break; // omitted = x
-            case 2: rotations .push (b, d, c, a); break; // omitted = y
-            case 3: rotations .push (b, c, d, a); break; // omitted = z
+            case 0: array .push (a, b, c, d); break; // omitted = w
+            case 1: array .push (d, b, c, a); break; // omitted = x
+            case 2: array .push (b, d, c, a); break; // omitted = y
+            case 3: array .push (b, c, d, a); break; // omitted = z
             default: throw new Error ("Invalid quaternion mode");
          }
       }
 
-      return rotations;
+      return array;
+   }
+
+   unpackScales ()
+   {
+      const {
+         ["meta.json"]: { count, scales: { codebook } },
+         ["scales.webp"]: scales,
+      } = this .files;
+
+      const
+         N     = count * 4,
+         array = [ ];
+
+      for (let i = 0; i < N; i += 4)
+      {
+         array .push (
+            Math .exp (codebook [scales [i + 0]]), // r,g,b are 0..255
+            Math .exp (codebook [scales [i + 1]]),
+            Math .exp (codebook [scales [i + 2]]),
+         );
+      }
+
+      return array;
    }
 }
 
