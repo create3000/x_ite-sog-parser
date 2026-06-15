@@ -93,12 +93,13 @@ class SOGParser extends X3D .X3DParser
       await this .unpackImages ();
 
       const
-         positions = this .unpackPositions (),
-         rotations = this .unpackRotations (),
-         scales    = this .unpackScales ();
+         positions     = this .unpackPositions (),
+         rotations     = this .unpackRotations (),
+         scales        = this .unpackScales (),
+         [alphas, sh0] = this .unpackAlphasAndAColors ();
 
       console .log (this .files);
-      console .log (scales);
+      console .log (alphas, sh0);
    }
 
    async unpackImages ()
@@ -276,6 +277,32 @@ class SOGParser extends X3D .X3DParser
       }
 
       return array;
+   }
+
+   unpackAlphasAndAColors ()
+   {
+      const {
+         ["meta.json"]: { count, sh0: { codebook } },
+         ["sh0.webp"]: sh0,
+      } = this .files;
+
+      const
+         N      = count * 4,
+         array  = [ ],
+         alphas = [ ];
+
+      for (let i = 0; i < N; i += 4)
+      {
+         array .push (
+            codebook [sh0 [i + 0]],
+            codebook [sh0 [i + 1]],
+            codebook [sh0 [i + 2]],
+         );
+
+         alphas .push (sh0 [i+ 3] / 255);
+      }
+
+      return [alphas, array];
    }
 }
 
