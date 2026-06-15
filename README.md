@@ -33,7 +33,7 @@ npm i x_ite-sog-parser
 
 ## Converter
 
-Look at the bottom part of the following page, there is a converter: https://www.nianticspatial.com/blog/spz4
+There is a converter: https://superspl.at/convert
 
 ## License
 
