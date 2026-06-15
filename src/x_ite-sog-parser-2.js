@@ -26,14 +26,15 @@ class SOGParser extends X3D .X3DParser
 
    isValid ()
    {
+      // Check magic.
+
       const dataView = new DataView (this .buffer);
 
       if (dataView .getUint32 (0, false) !== 0x504B0304)
          return false;
 
-      this .files = unzipSync (new Uint8Array (this .buffer));
-
       // Check minimum requirement for Gaussian Splats.
+
       const keys = [
          "means_l.webp",
          "means_u.webp",
@@ -43,8 +44,12 @@ class SOGParser extends X3D .X3DParser
          "meta.json",
       ];
 
+      this .files = unzipSync (new Uint8Array (this .buffer));
+
       if (!keys .every (key => this .files [key]))
          return false;
+
+      // Check version.
 
       const meta = this .parseMeta ();
 
