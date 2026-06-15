@@ -1,0 +1,48 @@
+{
+  "name": "x_ite-sog-parser",
+  "version": "1.0.0",
+  "description": "3DGS SOG File Format Parser for X_ITE",
+  "main": "dist/x_ite-sog-parser.js",
+  "module": "dist/x_ite-sog-parser.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "dist": "node build/dist.js",
+    "prerelease": "npm run dist",
+    "release": "node build/release.js",
+    "sog": "node build/sog.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/create3000/x_ite-sog-parser.git"
+  },
+  "keywords": [
+    "3D",
+    "3DGS",
+    "Browser",
+    "JavaScript",
+    "Node",
+    "SOG",
+    "x_ite",
+    "X3D"
+  ],
+  "author": "Holger Seelig <holger.seelig@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/create3000/x_ite-sog-parser/issues"
+  },
+  "homepage": "https://github.com/create3000/x_ite-sog-parser#readme",
+  "funding": {
+    "type": "patreon",
+    "url": "https://patreon.com/X_ITE"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
+    "shell-tools": "^1.1.9",
+    "webpack": "^5.107.2",
+    "webpack-cli": "^7.0.3"
+  }
+}
