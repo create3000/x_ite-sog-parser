@@ -16,15 +16,18 @@ class SOGParser extends X3D .X3DParser
       return "ARRAY_BUFFER";
    }
 
-   setInput (input)
+   setInput (buffer)
    {
-      this .input = input;
+      this .buffer = buffer;
    }
 
    isValid ()
    {
-      console .log (this .input);
-      
+      const dataView = new DataView (this .buffer);
+
+      if (dataView .getUint32 (0, false) !== 0x504B0304)
+         return false;
+
       return true;
    }
 
