@@ -46,6 +46,11 @@ class SOGParser extends X3D .X3DParser
       if (!Object .keys (this .files) .every (file => files .has (file)))
          return false;
 
+      this .meta = this .parseMeta ();
+
+      if (this .meta .version < 2 || this .meta .version > 2)
+         return false;
+
       return true;
    }
 
@@ -58,8 +63,6 @@ class SOGParser extends X3D .X3DParser
 
    async sog ()
    {
-      console .log (this .files)
-
       const
          browser = this .getBrowser (),
          scene   = this .getScene ();
@@ -71,11 +74,23 @@ class SOGParser extends X3D .X3DParser
       await this .getBrowser () .loadComponents (scene);
 
       const
-         gaussianSplats = scene .createNode ("GaussianSplats");
+         gaussianSplats = scene .createNode ("GaussianSplats"),
+         stuff          = this .unpackFiles ();
 
       scene .rootNodes .push (gaussianSplats);
 
       return scene;
+   }
+
+   parseMeta ()
+   {
+      return JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
+   }
+
+   unpackFiles ()
+   {
+      console .log (this .files);
+      console .log (this .meta);
    }
 }
 
