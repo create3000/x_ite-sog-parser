@@ -92,7 +92,10 @@ class SOGParser extends X3D .X3DParser
    {
       await this .unpackImages ();
 
+      const positions = this .unpackPositions ();
+
       console .log (this .files);
+      console .log (positions);
    }
 
    async unpackImages ()
@@ -162,9 +165,48 @@ class SOGParser extends X3D .X3DParser
       return data;
    }
 
-   getPixel (i, width)
+   unpackPositions ()
    {
-      return [i % width, Math .floor (i / width)];
+      const lerp = (a, b, t) => a + t * (b - a);
+
+      const unlog = n => Math .sign (n) * (Math .exp (Math .abs (n)) - 1);
+
+      const {
+         ["meta.json"]: { count, means: { mins, maxs }},
+         ["means_l.webp"]: means_l,
+         ["means_u.webp"]: means_u,
+      } = this .files;
+
+      const N = count * 4;
+
+      const positions = [ ];
+
+      for (let i = 0; i < N; i += 4)
+      {
+         // 16-bit normalized value per axis (0..65535)
+
+         const
+            qx = (means_u [i + 0] << 8) | means_l [i + 0],
+            qy = (means_u [i + 1] << 8) | means_l [i + 1],
+            qz = (means_u [i + 2] << 8) | means_l [i + 2];
+
+         // Dequantize into *log-domain* nx,ny,nz using per-axis ranges from meta:
+
+         const
+            nx = lerp (mins [0], maxs [0], qx / 65535),
+            ny = lerp (mins [1], maxs [1], qy / 65535),
+            nz = lerp (mins [2], maxs [2], qz / 65535);
+
+         // Undo the symmetric log transform used at encode time:
+
+         positions .push (
+            unlog (nx),
+            unlog (ny),
+            unlog (nz),
+         );
+      }
+
+      return positions;
    }
 }
 
