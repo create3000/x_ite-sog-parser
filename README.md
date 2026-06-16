@@ -19,11 +19,15 @@ Include the script after X_ITE:
 <script type="module" src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.0.4/dist/x_ite-sog-parser-2.min.js"></script>
 ```
 
-Now you can load 3DGS SOG files:
+Now you can load 3DGS SOG files with the `data-src` attribute:
 
 ```html
-<x3d-canvas src="room.sog"></x3d-canvas>
+<x3d-canvas data-src="room.sog"></x3d-canvas>
 ```
+
+Or use `.sog` files as source of an Inline node.
+
+## NPM
 
 You can also install it from npm:
 
