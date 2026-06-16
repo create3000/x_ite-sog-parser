@@ -22,6 +22,7 @@ module .exports = async () =>
          library: {
             type: "module",
          },
+         iife: true,
       },
       experiments: {
          outputModule: true,

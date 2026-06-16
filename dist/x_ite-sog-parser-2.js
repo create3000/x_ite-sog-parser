@@ -1,3 +1,4 @@
+/******/ (() => { // webpackBootstrap
 
 ;// ./node_modules/fflate/esm/browser.js
 // DEFLATE is a complex format; to read this code, you should probably check the RFC first:
@@ -2724,7 +2725,7 @@ class SOGParser extends X3D .X3DParser
    {
       if (this .buffer .byteLength < 4)
          return false;
-      
+
       // Check magic.
 
       const dataView = new DataView (this .buffer);
@@ -3149,3 +3150,5 @@ class SOGParser extends X3D .X3DParser
 
 X3D .GoldenGate .addParsers (SOGParser);
 
+/******/ })()
+;
