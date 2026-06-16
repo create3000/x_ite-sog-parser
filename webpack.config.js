@@ -1,7 +1,6 @@
 const
-   TerserPlugin = require ("terser-webpack-plugin"),
-   path         = require ("path"),
-   os           = require ("os");
+   path = require ("path"),
+   os   = require ("os");
 
 module .exports = async () =>
 {
@@ -32,22 +31,7 @@ module .exports = async () =>
          rules: [ ],
       },
       optimization: {
-         minimize: true,
-         minimizer: [
-            new TerserPlugin ({
-               include: /\.min\.mjs$/,
-               parallel: true,
-               extractComments: true,
-               terserOptions: {
-                  module: true,
-                  compress: true,
-                  mangle: true,
-                  format: {
-                     comments: false,
-                  },
-               },
-            }),
-         ],
+         minimize: false,
       },
       node: {
          __filename: false,
@@ -67,7 +51,7 @@ module .exports = async () =>
       },
    });
 
-   console .log (`Using ${os .cpus () .length} CPUs to package X_ITE.`);
+   console .log (`Using ${os .cpus () .length} CPUs to package project.`);
 
    targets .parallelism = os .cpus () .length;
 
