@@ -19,12 +19,10 @@ Include the script after X_ITE:
 <script type="module" src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.1.2/dist/x_ite-sog-parser-2.min.js"></script>
 ```
 
-You can now load `.sog` files directly using the `src` attribute, but you also have to add the `extensions` attribute with a number indicating how many X_ITE extension have been included. Each extension should decrement this count and when it becomes `0`, the canvas knows that all extensions have been loaded and now starts loading the file in the `src` attribute.
-
-You can also use `.sog` files as source of an Inline node.
+You can now load `.sog` files directly using the `src` attribute, but you can also use `.sog` files as source of an Inline node.
 
 ```html
-<x3d-canvas src="room.sog" extensions="1"></x3d-canvas>
+<x3d-canvas src="room.sog"></x3d-canvas>
 ```
 
 ## NPM

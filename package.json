@@ -44,6 +44,7 @@
     "globals": "^17.6.0",
     "shell-tools": "^1.1.9",
     "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3"
+    "webpack-cli": "^7.0.3",
+    "x_ite-extension": "^1.0.0"
   }
 }
