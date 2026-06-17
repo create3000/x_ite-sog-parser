@@ -24,7 +24,7 @@ Now you can directly load `.sog` files with the `src` attribute, but you also ha
 You can also use `.sog` files as source of an Inline node.
 
 ```html
-<x3d-canvas data-src="room.sog"></x3d-canvas>
+<x3d-canvas data-src="room.sog" extensions="1"></x3d-canvas>
 ```
 
 ## NPM
