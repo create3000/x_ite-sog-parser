@@ -9,14 +9,14 @@ SOG File Format Parser for [X_ITE](https://create3000.github.io/x_ite/) for 3D G
 
 ## Usage
 
-Include the script after X_ITE:
+Include the script before X_ITE:
 
 ```html
-<script defer src="https://cdn.jsdelivr.net/npm/x_ite@VERSION/dist/x_ite.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.2.0/dist/x_ite-sog-parser-2.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/x_ite@VERSION/dist/x_ite.min.js"></script>
 <!-- or as ES module -->
-<script type="module" src="https://cdn.jsdelivr.net/npm/x_ite@VERSION/dist/x_ite.min.mjs"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.2.0/dist/x_ite-sog-parser-2.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/x_ite@VERSION/dist/x_ite.min.mjs"></script>
 ```
 
 You can now load `.sog` files directly using the `src` attribute, but you can also use `.sog` files as source of an Inline node.
