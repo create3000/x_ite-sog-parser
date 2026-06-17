@@ -13,10 +13,10 @@ Include the script after X_ITE:
 
 ```html
 <script defer src="https://cdn.jsdelivr.net/npm/x_ite@VERSION/dist/x_ite.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.0.5/dist/x_ite-sog-parser-2.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.1.0/dist/x_ite-sog-parser-2.min.js"></script>
 <!-- or as ES module -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/x_ite@VERSION/dist/x_ite.min.mjs"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.0.5/dist/x_ite-sog-parser-2.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/x_ite-sog-parser@1.1.0/dist/x_ite-sog-parser-2.min.js"></script>
 ```
 
 Now you can directly load `.sog` files with the `src` attribute, but you also have to add the `extensions` attribute with a number, how many X_ITE extension you have included. Each extension will decrease this count and when it becomes `0`, the canvas knows that all extensions are loaded and now starts loading the file in the `src` attribute.

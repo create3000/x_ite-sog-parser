@@ -3150,22 +3150,15 @@ class SOGParser extends X3D .X3DParser
 
 X3D .GoldenGate .addParsers (SOGParser);
 
-// Check data-src attribute and set src attribute if any.
+// Decrement extensions attribute to show that the parser is loaded.
 
 const canvases = document .querySelectorAll ("x3d-canvas");
 
 for (const canvas of canvases)
 {
-  const
-   browser = X3D .getBrowser (canvas),
-   element = browser .element,
-   src     = element .getAttribute ("data-src");
+   const { element } = X3D .getBrowser (canvas);
 
-   if (!src)
-      continue;
-
-   element .setAttribute ("src", src);
-   element .removeAttribute ("data-src");
+   element .setAttribute ("extensions", Math .max ((element .getAttribute ("extensions")|0) - 1, 0));
 }
 
 /******/ })()
