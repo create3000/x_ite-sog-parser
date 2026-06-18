@@ -1,6 +1,6 @@
 {
   "name": "x_ite-sog-parser",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "3DGS SOG File Format Parser for X_ITE",
   "main": "dist/x_ite-sog-parser-2.js",
   "module": "dist/x_ite-sog-parser-2.js",
@@ -39,12 +39,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.4.1",
+    "eslint": "^10.5.0",
     "fflate": "^0.8.3",
     "globals": "^17.6.0",
     "shell-tools": "^1.1.9",
     "webpack": "^5.107.2",
     "webpack-cli": "^7.0.3",
-    "x_ite-extension": "^1.0.0"
+    "x_ite-extension": "^1.0.1"
   }
 }
