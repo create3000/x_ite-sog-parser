@@ -2758,6 +2758,20 @@ const __webpack_exports__default = __nested_webpack_exports__.A;
 */
 __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
 {
+   keys = [
+      "means_l.webp",
+      "means_u.webp",
+      "scales.webp",
+      "sh0.webp",
+      "quats.webp",
+      "meta.json",
+   ];
+
+   optionalKeys = [
+      "shN_centroids.webp",
+      "shN_labels.webp",
+   ];
+
    static
    {
       X3D .GoldenGate .addParsers (this);
@@ -2792,18 +2806,9 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
 
       // Check minimum requirement for Gaussian Splats.
 
-      const keys = [
-         "means_l.webp",
-         "means_u.webp",
-         "scales.webp",
-         "sh0.webp",
-         "quats.webp",
-         "meta.json",
-      ];
-
       this .files = unzipSync (new Uint8Array (this .buffer));
 
-      if (!keys .every (key => this .files [key]))
+      if (!this .keys .every (key => this .files [key]))
          return false;
 
       // Check version.
@@ -2936,6 +2941,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
    {
       return Promise .all (Object .keys (this .files)
          .filter (key => key .endsWith (".webp"))
+         .filter (key => this .keys .includes (key) || this .optionalKeys .includes (key))
          .map (key => this .unpackImage (key)));
    }
 
@@ -2945,7 +2951,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
          bytes = this .files [key],
          blob  = new Blob ([bytes], { type: "image/webp" }),
          url   = URL .createObjectURL (blob),
-         image = await this .loadImage (url),
+         image = await this .loadImage (key, url),
          data  = this .readPixels (image);
 
       this .files [key] = image;
@@ -2954,7 +2960,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
       URL .revokeObjectURL (url);
    }
 
-   loadImage (url)
+   loadImage (key, url)
    {
       return new Promise ((resolve, reject) =>
       {
@@ -2963,7 +2969,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
          image .onload = () => resolve (image);
 
          image .onerror =
-         image .onabort = event => reject (new Error (`Couldn't load WebP image: ${event .type}.`));
+         image .onabort = event => reject (new Error (`Couldn't load WebP image '${key}': ${event .type}.`));
 
          image .src = url;
       });
