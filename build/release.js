@@ -32,7 +32,9 @@ function main ()
 	systemSync (`git push origin --tags`);
 
 	// npm
-	// systemSync (`npm login`);
+	if (systemSync (`npm whoami > /dev/null 2>&1`))
+		systemSync (`npm login`);
+
 	systemSync (`npm publish`);
 }
 
