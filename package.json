@@ -39,12 +39,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.5.0",
+    "eslint": "^10.6.0",
     "fflate": "^0.8.3",
-    "globals": "^17.6.0",
+    "globals": "^17.7.0",
     "shell-tools": "^1.1.9",
-    "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3",
+    "terser-webpack-plugin": "^5.6.1",
+    "webpack": "^5.108.1",
+    "webpack-cli": "^7.1.0",
     "x_ite-extension": "^1.0.1"
   }
 }
