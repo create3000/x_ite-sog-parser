@@ -2836,7 +2836,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
 
       scene .setEncoding ("SOG");
       scene .setProfile (browser .getProfile ("Interchange"));
-      scene .addComponent (browser .getComponent ("X_ITE"));
+      scene .addComponent (browser .getComponent ("GaussianSplats"));
 
       await this .getBrowser () .loadComponents (scene);
 
