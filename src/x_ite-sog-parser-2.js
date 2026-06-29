@@ -113,7 +113,7 @@ register (X3D => class SOGParser extends X3D .X3DParser
             shs      = gaussianCloud .shs,
             shDegree = bands;
 
-         this .setSphericalHarmonics (count, shs, shDegree, gaussianSplats)
+         this .setSphericalHarmonics (count, shs, shDegree, gaussianSplats);
       }
 
       // Add nodes to scene.
@@ -183,7 +183,7 @@ register (X3D => class SOGParser extends X3D .X3DParser
          alphas,
          colors,
          shs,
-      }
+      };
    }
 
    async unpackImages ()
