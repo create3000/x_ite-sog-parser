@@ -2864,7 +2864,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
             shs      = gaussianCloud .shs,
             shDegree = bands;
 
-         this .setSphericalHarmonics (count, shs, shDegree, gaussianSplats)
+         this .setSphericalHarmonics (count, shs, shDegree, gaussianSplats);
       }
 
       // Add nodes to scene.
@@ -2934,7 +2934,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
          alphas,
          colors,
          shs,
-      }
+      };
    }
 
    async unpackImages ()
@@ -2971,7 +2971,8 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
          image .onerror =
          image .onabort = event => reject (new Error (`Couldn't load WebP image '${key}': ${event .type}.`));
 
-         image .src = url;
+         image .crossOrigin = "anonymous";
+         image .src         = url;
       });
    }
 
