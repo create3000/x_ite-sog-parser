@@ -2874,6 +2874,9 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
       transform .children .push (gaussianSplats);
       scene .rootNodes .push (transform);
 
+      scene .addNamedNode (scene .getUniqueName ("GaussianSplats"), gaussianSplats);
+      scene .addExportedNode (scene .getUniqueExportName ("GaussianSplats"), gaussianSplats);
+
       return scene;
    }
 
