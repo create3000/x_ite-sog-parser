@@ -1,13 +1,4 @@
 /node_modules/
-/docs/ssl
 /build-sog/
 
 **/.DS_Store
-
-Gemfile.lock
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-.bundle
-vendor
