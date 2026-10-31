@@ -7,7 +7,7 @@ import register      from "../node_modules/x_ite-extension/dist/x_ite-extension.
 */
 register (X3D => class SOGParser extends X3D .X3DParser
 {
-   keys = [
+   static keys = [
       "means_l.webp",
       "means_u.webp",
       "scales.webp",
@@ -31,33 +31,30 @@ register (X3D => class SOGParser extends X3D .X3DParser
       super (scene);
    }
 
-   getEncoding ()
+   static getEncoding ()
    {
       return "ARRAY_BUFFER";
    }
 
-   setInput (buffer)
+   static isValid (input)
    {
-      this .buffer = buffer;
-   }
+      const buffer = input;
 
-   isValid ()
-   {
-      if (this .buffer .byteLength < 4)
+      if (buffer .byteLength < 4)
          return false;
 
       // Check magic.
 
-      const dataView = new DataView (this .buffer);
+      const dataView = new DataView (buffer);
 
       if (dataView .getUint32 (0, false) !== 0x504B0304)
          return false;
 
       // Check minimum requirement for Gaussian Splats.
 
-      this .files = unzipSync (new Uint8Array (this .buffer));
+      const files = unzipSync (new Uint8Array (buffer));
 
-      if (!this .keys .every (key => this .files [key]))
+      if (!this .keys .every (key => files [key]))
          return false;
 
       // Check version.
@@ -68,6 +65,16 @@ register (X3D => class SOGParser extends X3D .X3DParser
          return false;
 
       return true;
+   }
+
+   static parseMeta (files)
+   {
+      return files .meta = JSON .parse (new TextDecoder () .decode (files ["meta.json"]));
+   }
+
+   setInput (buffer)
+   {
+      this .buffer = buffer;
    }
 
    parseIntoScene (resolve, reject)
@@ -163,13 +170,12 @@ register (X3D => class SOGParser extends X3D .X3DParser
       }
    }
 
-   parseMeta ()
-   {
-      return this .files .meta = JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
-   }
-
    async unpackFiles ()
    {
+      this .files = unzipSync (new Uint8Array (this .buffer));
+
+      SOGParser .parseMeta (this .files);
+
       await this .unpackImages ();
 
       const
