@@ -2758,7 +2758,7 @@ const __webpack_exports__default = __nested_webpack_exports__.A;
 */
 __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
 {
-   keys = [
+   static keys = [
       "means_l.webp",
       "means_u.webp",
       "scales.webp",
@@ -2782,43 +2782,50 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
       super (scene);
    }
 
-   getEncoding ()
+   static getEncoding ()
    {
       return "ARRAY_BUFFER";
    }
 
-   setInput (buffer)
+   static isValid (input)
    {
-      this .buffer = buffer;
-   }
+      const buffer = input;
 
-   isValid ()
-   {
-      if (this .buffer .byteLength < 4)
+      if (buffer .byteLength < 4)
          return false;
 
       // Check magic.
 
-      const dataView = new DataView (this .buffer);
+      const dataView = new DataView (buffer);
 
       if (dataView .getUint32 (0, false) !== 0x504B0304)
          return false;
 
       // Check minimum requirement for Gaussian Splats.
 
-      this .files = unzipSync (new Uint8Array (this .buffer));
+      const files = unzipSync (new Uint8Array (buffer));
 
-      if (!this .keys .every (key => this .files [key]))
+      if (!this .keys .every (key => files [key]))
          return false;
 
       // Check version.
 
-      const meta = this .parseMeta ();
+      const meta = this .parseMeta (files);
 
       if (meta .version < 2 || meta .version > 2)
          return false;
 
       return true;
+   }
+
+   static parseMeta (files)
+   {
+      return files .meta = JSON .parse (new TextDecoder () .decode (files ["meta.json"]));
+   }
+
+   setInput (buffer)
+   {
+      this .buffer = buffer;
    }
 
    parseIntoScene (resolve, reject)
@@ -2914,13 +2921,12 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
       }
    }
 
-   parseMeta ()
-   {
-      return this .files .meta = JSON .parse (new TextDecoder () .decode (this .files ["meta.json"]));
-   }
-
    async unpackFiles ()
    {
+      this .files = unzipSync (new Uint8Array (this .buffer));
+
+      SOGParser .parseMeta (this .files);
+
       await this .unpackImages ();
 
       const
@@ -2944,7 +2950,7 @@ __webpack_exports__default (X3D => class SOGParser extends X3D .X3DParser
    {
       return Promise .all (Object .keys (this .files)
          .filter (key => key .endsWith (".webp"))
-         .filter (key => this .keys .includes (key) || this .optionalKeys .includes (key))
+         .filter (key => SOGParser .keys .includes (key) || this .optionalKeys .includes (key))
          .map (key => this .unpackImage (key)));
    }
 
